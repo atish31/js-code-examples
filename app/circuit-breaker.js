@@ -1,61 +1,58 @@
-const circuitBreaker = (fn, count, threshold) => {
-    let failure = 0;
-    let timeSinceLastFailure = 0;
-
-    return function(...args) {
-        if(failure === count) {
-            const diff = Date.now() - timeSinceLastFailure;
-            if(diff < threshold) {
-                return 'service not available'
-            }
+// https://learnersbucket.com/examples/interview/circuit-breaker-in-javascript/
+const executeApi = (threshold, fn) => {
+    const maxNumberOfTries = 3;
+    let failureCount = 0;
+    let timeAtFailure;
+    let timeSinceLastFailure;
+    let processFunction = true;
+  
+    return (...args) => {
+        if(timeAtFailure) {
+          timeSinceLastFailure = Date.now() - timeAtFailure;
+          if(timeSinceLastFailure <= threshold) {
+            return;
+          }
         }
-        
         try {
-            invokeFunction = true; 
-            const result = fn(...args);
-            failure = 0;
-            return(result, 'result')
+          fn();
+        } catch(e) {
+          failureCount++;
+          if(failureCount >= maxNumberOfTries) {
+            console.log('function hit too many times, please try again later');
+            timeAtFailure = Date.now();
+            failureCount = 0;
+          }
         }
-        catch(error) {
-            failure++;
-            if(failure === count) {
-                timeSinceLastFailure = Date.now();
-            }
-            return(error, 'error');
-        }
-        
+      }
     }
-}
-
-const testFunction = () => {
-    let count = 0;
-    return function() {
-        if(count < 4) {
-            count++;
-            throw ('error');
-        } else {
-            count = 0;
-            return 'return test function';
-        }
+  
+  const testFn = () => {
+    let count = 4;
+    return () => {
+      if (count > 2) {
+        console.log('test function executed');
+        count = 0;
+      } else {
+          console.log('error');
+          count++;
+          throw('error');
+      }
     }
-}
-
-let t = testFunction();
-let exe = circuitBreaker(t, 4, 3000);
-
-console.log(exe());
-console.log(exe());
-console.log(exe());
-console.log(exe());
-console.log(exe());
-console.log(exe());
-console.log(exe());
-console.log(exe());
-console.log(exe());
-console.log(exe());
-console.log(exe());
-console.log(exe());
-
-setTimeout(() => {
-    console.log(exe());
-}, 4000);
+  }
+  
+  const threshold = 5000;
+  const execute = executeApi(threshold, testFn());
+  
+  execute();
+  execute();
+  execute();
+  execute();
+  execute();
+  execute();
+  execute();
+  
+  
+  setTimeout(() => {
+    execute();
+  }, 6000)
+  
