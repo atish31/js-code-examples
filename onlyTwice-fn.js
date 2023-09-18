@@ -2,14 +2,20 @@
 
 const onlyTwice = (fn) => {
     let oddInstances = true;
-    let oddInstance = fn;
-    let evenInstance = fn;
+    let oddInstance;
+    let evenInstance;
 
     return () => {
         if(oddInstances) {
+            if(!oddInstance) {
+                oddInstance = fn;
+            }
             oddInstances = !oddInstances;
             return oddInstance;
         } else {
+            if(!evenInstance) {
+                evenInstance = fn;
+            }
             oddInstances = !oddInstances;
             return evenInstance;
         }
