@@ -20,4 +20,4 @@ const init = () => {
 const upCount = init();
 upCount();
 
-const interval = setInterval(upCount, 1000)
+const interval = setInterval(upCount, 1000);
