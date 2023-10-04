@@ -1,9 +1,11 @@
-const numbers = [1, 2, 3, 4, 5];
-
-const reducer = (accumulator, val) => {
-    accumulator.push(val);
+const reducer = (accumulator, value) => {
+    accumulator = accumulator * value;
     return accumulator;
 }
 
-const finalArray = numbers.reduce(reducer, []);
-console.log(finalArray, 'finalArray')
+const array = [1, 2, 3, 4, 5];
+let output1 = array.reduce(reducer);
+let output2 = array.reduce(reducer, 0);
+
+console.log(output1);
+console.log(output2);

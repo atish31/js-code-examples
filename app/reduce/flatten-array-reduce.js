@@ -1,1 +1,2 @@
-const numArray = [1, 2, [3, 10, [11, 12]], [1, 2, [3, 4]], 5, 6];
+//flatten array using reduce
+
