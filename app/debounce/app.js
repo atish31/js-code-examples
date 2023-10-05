@@ -5,10 +5,15 @@ function getValue(e) {
 }
 
 function getDebounceValue(cb, delay) {
+    let timeout;
     return (e) => {
-        setTimeout(() => {
+        if(timeout) {
+            clearInterval(timeout);
+        }
+       timeout = setTimeout(() => {
             cb(e);
-        }, delay)
+        }, delay);
+
     }
     
 }
@@ -16,10 +21,9 @@ function getDebounceValue(cb, delay) {
 function init() {
     const input = document.querySelector('#input');
     const updateDebounceValue = getDebounceValue;
-
+    const updateValue = updateDebounceValue(getValue, 3000);
     input.addEventListener('input', (e) => {
-        updateDebounceValue(getValue, 3000)(e);
-        
+       updateValue(e);
     })
 
 }
