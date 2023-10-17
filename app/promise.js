@@ -21,7 +21,6 @@ promise.finally(() => {
 (error) => {
     throw error;
 })
-
 .catch(error => {
     console.log(`Print the error ${error}`);
 })
